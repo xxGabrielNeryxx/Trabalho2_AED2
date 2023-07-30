@@ -1,0 +1,3 @@
+/home/estevao/Faculdade/Trabalho2_AED2/build/CMakeFiles/TrabalhoAed2.dir
+/home/estevao/Faculdade/Trabalho2_AED2/build/CMakeFiles/edit_cache.dir
+/home/estevao/Faculdade/Trabalho2_AED2/build/CMakeFiles/rebuild_cache.dir
