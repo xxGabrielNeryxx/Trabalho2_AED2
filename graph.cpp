@@ -3,26 +3,28 @@
 #include <stack>
 
 Graph::Graph(int n_edges) {
-    this->numEdges = n_edges;
-    this->adj = new std::vector<int>[n_edges];
+    numEdges = n_edges;
+    adj = std::vector<std::vector<int>>(numEdges);
 }
 
-void Graph::dfs1(int v, bool used[], std::stack<int> &stack) {
+
+
+void Graph::dfs(int v, bool used[], std::stack<int> &stack) {
     used[v] = true;
     for (int u : adj[v]) {
         if (!used[u]) {
-            dfs1(u, used, stack);
+            dfs(u, used, stack);
         }
     }
     stack.push(v);
 }
 
-void Graph::dfs(int v, bool used[]) {
+void Graph::dfsPrint(int v, bool used[]) {
     used[v] = true;
     std::cout << v << ' ';
     for (int u : adj[v]) {
         if (!used[u]) {
-            dfs(u, used);
+            dfsPrint(u, used);
         }
     }
 }
@@ -30,7 +32,7 @@ void Graph::dfs(int v, bool used[]) {
 void Graph::addEdge(int a, int b) {
     if (a < 0 || b < 0 || a >= numEdges || b >= numEdges)
         return;
-    this->adj[a].push_back(b);
+    adj[a].push_back(b);
 }
 
 void Graph::displayAdjList() {
@@ -44,7 +46,7 @@ void Graph::displayAdjList() {
 }
 
 Graph Graph::transposedGraph() {
-    Graph g(this->numEdges);
+    Graph g(numEdges);
 
     for (int i = 0; i < numEdges; i++) {
         for (int v : adj[i]) {
@@ -64,7 +66,7 @@ void Graph::kosajuru() {
 
     for (int i = 0; i < numEdges; i++) {
         if (!used[i]) {
-            dfs1(i, used, stack);
+            dfs(i, used, stack);
         }
     }
 
@@ -78,8 +80,42 @@ void Graph::kosajuru() {
         stack.pop();
 
         if (!used[v]) {
-            gt.dfs(v, used);
+            gt.dfsPrint(v, used);
             std::cout << '\n';
         }
     }
+
+    delete used;
+}
+
+
+bool Graph::isCyclic_util(std::vector<bool> visited, int curr){
+    if(visited[curr]==true)
+        return true;
+    
+    visited[curr] = true;
+    bool FLAG = false;
+
+    for(int i=0;i<adj[curr].size();++i){
+        FLAG = isCyclic_util(visited, adj[curr][i]);
+        if(FLAG==true)
+            return true;
+    }
+    return false;
+}
+
+
+bool Graph::isCyclic(){
+   std::vector<bool> visited(numEdges, false);
+   bool FLAG = false;
+   for(int i=0; i<numEdges; i++){
+           visited[i] = true;
+           for(int j=0; j<adj[i].size(); j++){
+               FLAG = isCyclic_util(visited, adj[i][j]);
+               if(FLAG == true)
+                    return true;
+           }
+           visited[i] = false;
+   }
+   return false;
 }
