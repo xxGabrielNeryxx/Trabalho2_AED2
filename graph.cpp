@@ -7,8 +7,6 @@ Graph::Graph(int n_edges) {
     adj = std::vector<std::vector<int>>(numEdges);
 }
 
-
-
 void Graph::dfs(int v, bool used[], std::stack<int> &stack) {
     used[v] = true;
     for (int u : adj[v]) {
@@ -75,6 +73,8 @@ void Graph::kosajuru() {
     for (int i = 0; i < numEdges; i++)
         used[i] = false;
 
+    std::cout << "strongly connected components:\n";
+
     while (!stack.empty()) {
         int v = stack.top();
         stack.pop();
@@ -88,34 +88,32 @@ void Graph::kosajuru() {
     delete used;
 }
 
-
-bool Graph::isCyclic_util(std::vector<bool> visited, int curr){
-    if(visited[curr]==true)
+bool Graph::isCyclic_util(std::vector<bool> visited, int curr) {
+    if (visited[curr] == true)
         return true;
-    
+
     visited[curr] = true;
     bool FLAG = false;
 
-    for(int i=0;i<adj[curr].size();++i){
+    for (int i = 0; i < adj[curr].size(); ++i) {
         FLAG = isCyclic_util(visited, adj[curr][i]);
-        if(FLAG==true)
+        if (FLAG == true)
             return true;
     }
     return false;
 }
 
-
-bool Graph::isCyclic(){
-   std::vector<bool> visited(numEdges, false);
-   bool FLAG = false;
-   for(int i=0; i<numEdges; i++){
-           visited[i] = true;
-           for(int j=0; j<adj[i].size(); j++){
-               FLAG = isCyclic_util(visited, adj[i][j]);
-               if(FLAG == true)
-                    return true;
-           }
-           visited[i] = false;
-   }
-   return false;
+bool Graph::isCyclic() {
+    std::vector<bool> visited(numEdges, false);
+    bool FLAG = false;
+    for (int i = 0; i < numEdges; i++) {
+        visited[i] = true;
+        for (int j = 0; j < adj[i].size(); j++) {
+            FLAG = isCyclic_util(visited, adj[i][j]);
+            if (FLAG == true)
+                return true;
+        }
+        visited[i] = false;
+    }
+    return false;
 }
